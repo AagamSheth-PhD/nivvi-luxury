@@ -2,698 +2,422 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>NIVVI.IN — Premium Streetwear</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --black: #0a0a0a; --white: #fafafa;
+  --g100: #f4f4f2; --g200: #e8e8e5; --g400: #a8a8a4; --g600: #5a5a56; --g800: #2a2a28;
+  --accent: #f0c430;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+  --ease: cubic-bezier(0.4,0,0.2,1);
+}
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--white); color: var(--black); overflow-x: hidden; }
+@media (pointer:fine) { body { cursor: none; } }
+@media (pointer:coarse) { .cursor,.cursor-ring { display:none!important; } }
 
-  :root {
-    --black: #0a0a0a;
-    --white: #fafafa;
-    --grey-100: #f4f4f2;
-    --grey-200: #e8e8e5;
-    --grey-400: #a8a8a4;
-    --grey-600: #5a5a56;
-    --grey-800: #2a2a28;
-    --accent: #f0c430;
-    --accent-dark: #d4a820;
-    --serif: 'Playfair Display', Georgia, serif;
-    --sans: 'DM Sans', system-ui, sans-serif;
-    --transition: cubic-bezier(0.4, 0, 0.2, 1);
-  }
+/* CURSOR */
+.cursor { position:fixed; top:0; left:0; width:8px; height:8px; background:var(--black); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:transform .15s var(--ease),background .2s; }
+.cursor-ring { position:fixed; top:0; left:0; width:36px; height:36px; border:1px solid rgba(0,0,0,.35); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:transform .35s var(--ease),width .3s,height .3s,border-color .3s; }
+.cursor.hov { transform:translate(-50%,-50%) scale(2.5); background:var(--accent); }
+.cursor-ring.hov { width:56px; height:56px; border-color:var(--accent); }
 
-  html { scroll-behavior: smooth; }
+/* ── NAV ── */
+nav { position:fixed; top:0; left:0; right:0; z-index:1000; display:flex; align-items:center; justify-content:space-between; padding:0 40px; height:64px; background:rgba(250,250,250,.95); backdrop-filter:blur(16px); border-bottom:1px solid rgba(0,0,0,.06); transition:box-shadow .3s; }
+nav.scrolled { box-shadow:0 2px 24px rgba(0,0,0,.07); }
+.nav-logo { font-family:var(--serif); font-size:1.28rem; font-weight:700; letter-spacing:.06em; color:var(--black); text-decoration:none; }
+.nav-logo .ndot { color:var(--accent); }
+.nav-links { display:flex; align-items:center; gap:30px; list-style:none; }
+.nav-links a { font-size:.74rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--g600); text-decoration:none; position:relative; transition:color .2s; }
+.nav-links a::after { content:''; position:absolute; bottom:-3px; left:0; right:0; height:1px; background:var(--accent); transform:scaleX(0); transition:transform .28s var(--ease); }
+.nav-links a:hover { color:var(--black); }
+.nav-links a:hover::after { transform:scaleX(1); }
+.nav-right { display:flex; align-items:center; gap:14px; }
+.nav-cta { font-size:.7rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--white); background:var(--black); padding:8px 18px; text-decoration:none; transition:background .22s,color .22s; }
+.nav-cta:hover { background:var(--accent); color:var(--black); }
+.nav-ham { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:6px; background:none; border:none; }
+.nav-ham span { width:22px; height:1.5px; background:var(--black); display:block; transition:transform .3s,opacity .3s; }
+.nav-ham.open span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
+.nav-ham.open span:nth-child(2) { opacity:0; }
+.nav-ham.open span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
 
-  body {
-    font-family: var(--sans);
-    background: var(--white);
-    color: var(--black);
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
+/* MOBILE MENU */
+.mob-menu { display:none; position:fixed; inset:0; z-index:990; background:var(--white); flex-direction:column; padding:96px 32px 48px; gap:0; }
+.mob-menu.open { display:flex; }
+.mob-menu a { font-family:var(--serif); font-size:2rem; font-weight:600; color:var(--black); text-decoration:none; padding:14px 0; border-bottom:1px solid var(--g200); transition:color .2s; }
+.mob-menu a:hover { color:var(--accent); }
+.mob-close-btn { position:absolute; top:20px; right:24px; font-size:1.5rem; cursor:pointer; background:none; border:none; color:var(--g600); }
 
-  /* CUSTOM CURSOR - Hidden on touch devices */
-  @media (hover: hover) and (pointer: fine) {
-    .cursor {
-      position: fixed; top: 0; left: 0;
-      width: 8px; height: 8px;
-      background: var(--black);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transition: transform 0.15s var(--transition), opacity 0.2s;
-      transform: translate(-50%, -50%);
-    }
-    .cursor-ring {
-      position: fixed; top: 0; left: 0;
-      width: 36px; height: 36px;
-      border: 1px solid rgba(0,0,0,0.35);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transition: transform 0.35s var(--transition), width 0.3s, height 0.3s, border-color 0.3s;
-      transform: translate(-50%, -50%);
-    }
-    .cursor.hover { transform: translate(-50%, -50%) scale(2.5); background: var(--accent); }
-    .cursor-ring.hover { width: 56px; height: 56px; border-color: var(--accent); }
-  }
-  @media (hover: none) {
-    .cursor, .cursor-ring { display: none; }
-    body { cursor: auto; }
-  }
+/* ── HERO ── */
+.hero { position:relative; width:100%; height:100svh; min-height:480px; overflow:hidden; background:var(--black); }
+.hero-slide { position:absolute; inset:0; opacity:0; transition:opacity 1.2s var(--ease); }
+.hero-slide.active { opacity:1; }
+.hero-slide img { width:100%; height:100%; object-fit:cover; transform:scale(1.04); transition:transform 8s ease-out; }
+.hero-slide.active img { transform:scale(1); }
+.hero-grad { position:absolute; inset:0; background:linear-gradient(to bottom,rgba(0,0,0,.1) 0%,rgba(0,0,0,.55) 100%); }
+.hero-body { position:absolute; bottom:76px; left:5%; color:var(--white); opacity:0; transform:translateY(18px); transition:opacity .9s .35s,transform .9s .35s var(--ease); max-width:90%; }
+.hero-slide.active .hero-body { opacity:1; transform:translateY(0); }
+.hero-ey { font-size:.66rem; font-weight:500; letter-spacing:.24em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+.hero-title { font-family:var(--serif); font-size:clamp(1.9rem,6vw,4rem); font-weight:600; line-height:1.08; margin-bottom:20px; }
+.hero-btn { display:inline-block; font-size:.68rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--black); background:var(--white); padding:12px 26px; text-decoration:none; transition:background .22s; }
+.hero-btn:hover { background:var(--accent); }
+.hero-dots { position:absolute; bottom:30px; left:50%; transform:translateX(-50%); display:flex; gap:9px; }
+.hero-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.35); cursor:pointer; transition:background .3s,transform .3s; }
+.hero-dot.active { background:var(--accent); transform:scale(1.5); }
 
-  /* NAVBAR */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 1000;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 48px;
-    height: 72px;
-    background: rgba(250,250,250,0.92);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-    transition: background 0.4s, box-shadow 0.4s;
-  }
-  nav.scrolled {
-    background: rgba(250,250,250,0.97);
-    box-shadow: 0 2px 24px rgba(0,0,0,0.06);
-  }
-  .nav-logo {
-    font-family: var(--serif);
-    font-size: 1.35rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    color: var(--black);
-    text-decoration: none;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .nav-logo span { color: var(--accent); }
-  .nav-links {
-    display: flex; align-items: center; gap: 36px;
-    list-style: none;
-  }
-  .nav-links a {
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--grey-600);
-    text-decoration: none;
-    transition: color 0.25s;
-    position: relative;
-  }
-  .nav-links a::after {
-    content: '';
-    position: absolute; bottom: -3px; left: 0; right: 0;
-    height: 1px; background: var(--accent);
-    transform: scaleX(0);
-    transition: transform 0.3s var(--transition);
-  }
-  .nav-links a:hover { color: var(--black); }
-  .nav-links a:hover::after { transform: scaleX(1); }
-  .nav-right {
-    display: flex; align-items: center; gap: 20px;
-  }
-  .nav-cta {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--white);
-    background: var(--black);
-    padding: 10px 22px;
-    text-decoration: none;
-    transition: background 0.25s, color 0.25s;
-  }
-  .nav-cta:hover { background: var(--accent); color: var(--black); }
-  .nav-hamburger {
-    display: none;
-    flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
-  }
-  .nav-hamburger span {
-    width: 24px; height: 1.5px; background: var(--black);
-    transition: transform 0.3s;
-  }
+/* MARQUEE */
+.marquee-bar { background:var(--black); padding:12px 0; overflow:hidden; }
+.marquee-track { display:flex; animation:marq 22s linear infinite; white-space:nowrap; }
+.m-item { font-size:.66rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--g400); padding:0 32px; display:inline-flex; align-items:center; gap:32px; }
+.m-dot { color:var(--accent); font-size:.9rem; }
+@keyframes marq { from { transform:translateX(0); } to { transform:translateX(-50%); } }
 
-  /* HERO SLIDER */
-  .hero {
-    position: relative;
-    width: 100%; height: 100svh;
-    overflow: hidden;
-    background: var(--black);
-  }
-  .hero-slide {
-    position: absolute; inset: 0;
-    opacity: 0;
-    transition: opacity 1.2s var(--transition);
-    will-change: opacity;
-  }
-  .hero-slide.active { opacity: 1; }
-  .hero-slide img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    transform: scale(1.04);
-    transition: transform 8s ease-out;
-  }
-  .hero-slide.active img { transform: scale(1); }
-  .hero-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.42) 100%);
-  }
-  .hero-content {
-    position: absolute; bottom: 96px; left: 72px;
-    color: var(--white);
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 1s 0.4s, transform 1s 0.4s var(--transition);
-    z-index: 10;
-  }
-  .hero-slide.active .hero-content { opacity: 1; transform: translateY(0); }
-  .hero-eyebrow {
-    font-size: 0.72rem; font-weight: 500;
-    letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 12px;
-  }
-  .hero-title {
-    font-family: var(--serif);
-    font-size: clamp(2.4rem, 8vw, 4.2rem);
-    font-weight: 600; line-height: 1.08;
-    margin-bottom: 20px;
-    max-width: 600px;
-  }
-  .hero-btn {
-    display: inline-block;
-    font-size: 0.72rem; font-weight: 600;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--black); background: var(--white);
-    padding: 14px 32px;
-    text-decoration: none;
-    transition: background 0.25s, color 0.25s;
-  }
-  .hero-btn:hover { background: var(--accent); }
-  .hero-dots {
-    position: absolute; bottom: 40px; left: 50%;
-    transform: translateX(-50%);
-    display: flex; gap: 10px; z-index: 10;
-  }
-  .hero-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%; background: rgba(255,255,255,0.4);
-    cursor: pointer;
-    transition: background 0.3s, transform 0.3s;
-  }
-  .hero-dot.active { background: var(--accent); transform: scale(1.4); }
+/* UTIL */
+.container { max-width:1360px; margin:0 auto; padding:0 40px; }
+.eyebrow { font-size:.64rem; font-weight:500; letter-spacing:.26em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+.sec-title { font-family:var(--serif); font-size:clamp(1.7rem,3.5vw,2.8rem); font-weight:600; line-height:1.12; }
+.fade-up { opacity:0; transform:translateY(28px); transition:opacity .8s var(--ease),transform .8s var(--ease); }
+.fade-up.vis { opacity:1; transform:translateY(0); }
 
-  /* MARQUEE */
-  .marquee-bar {
-    background: var(--black);
-    padding: 14px 0;
-    overflow: hidden;
-  }
-  .marquee-track {
-    display: flex; gap: 0;
-    animation: marquee 22s linear infinite;
-    white-space: nowrap;
-  }
-  .marquee-item {
-    font-size: 0.72rem; font-weight: 500;
-    letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--grey-400); padding: 0 40px;
-    display: inline-flex; align-items: center; gap: 40px;
-  }
-  .marquee-item .dot { color: var(--accent); font-size: 1.2rem; line-height: 1; }
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* ── SPLIT ── */
+.split-section { display:grid; grid-template-columns:1fr 1fr; height:80vh; min-height:420px; }
+.split-item { position:relative; overflow:hidden; cursor:pointer; }
+.split-item img { width:100%; height:100%; object-fit:cover; transition:transform .9s var(--ease); }
+.split-item:hover img { transform:scale(1.06); }
+.split-grad { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.08) 55%); display:flex; flex-direction:column; justify-content:flex-end; padding:36px; }
+.split-tag { font-size:.62rem; font-weight:500; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
+.split-title { font-family:var(--serif); font-size:clamp(1.6rem,2.8vw,2.4rem); font-weight:600; color:var(--white); line-height:1.1; margin-bottom:16px; }
+.split-cta { display:inline-flex; align-items:center; gap:8px; font-size:.65rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--white); text-decoration:none; opacity:0; transform:translateY(6px); transition:opacity .32s,transform .32s; }
+.split-item:hover .split-cta { opacity:1; transform:translateY(0); }
+.split-arr { transition:transform .22s; }
+.split-cta:hover .split-arr { transform:translateX(5px); }
 
-  /* SECTIONS COMMON */
-  section { position: relative; }
-  .container { max-width: 1360px; margin: 0 auto; padding: 0 48px; }
-  .section-eyebrow {
-    font-size: 0.68rem; font-weight: 500;
-    letter-spacing: 0.25em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 14px;
-  }
-  .section-title {
-    font-family: var(--serif);
-    font-size: clamp(2rem, 3.5vw, 3.2rem);
-    font-weight: 600; line-height: 1.12;
-    color: var(--black);
-  }
+/* STATEMENT */
+.statement { padding:110px 40px; text-align:center; background:var(--g100); }
+.stmt-pre { font-size:.65rem; letter-spacing:.28em; text-transform:uppercase; color:var(--g400); margin-bottom:22px; }
+.stmt-text { font-family:var(--serif); font-size:clamp(1.4rem,2.8vw,2.5rem); font-weight:400; font-style:italic; line-height:1.4; max-width:800px; margin:0 auto 22px; color:var(--black); }
+.stmt-em { color:var(--g600); font-style:normal; font-weight:600; }
+.stmt-line { width:50px; height:2px; background:var(--accent); margin:0 auto; }
 
-  /* UPDATED SPLIT SECTION */
-  .split-section {
-    display: grid; grid-template-columns: 1fr 1fr;
-    height: 70vh; min-height: 450px;
-  }
-  .split-item {
-    position: relative; overflow: hidden;
-    cursor: pointer;
-  }
-  .split-item img {
-    width: 100%; height: 100%; object-fit: cover;
-    transition: transform 0.9s var(--transition);
-  }
-  .split-item:hover img { transform: scale(1.06); }
-  .split-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.1) 55%);
-    display: flex; flex-direction: column;
-    justify-content: flex-end; padding: 48px;
-  }
-  .split-tag {
-    font-size: 0.68rem; font-weight: 500;
-    letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 8px;
-  }
-  .split-title {
-    font-family: var(--serif);
-    font-size: clamp(1.8rem, 3vw, 2.6rem);
-    font-weight: 600; color: var(--white);
-    line-height: 1.1; margin-bottom: 20px;
-  }
+/* ── PRODUCTS ── */
+.products-section { padding:90px 0; background:var(--white); }
+.prod-header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:44px; flex-wrap:wrap; gap:14px; }
+.view-all { font-size:.68rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--g600); text-decoration:none; border-bottom:1px solid var(--g200); padding-bottom:2px; transition:color .22s,border-color .22s; }
+.view-all:hover { color:var(--black); border-color:var(--black); }
+.pgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
 
-  /* BRAND STATEMENT */
-  .statement {
-    padding: 120px 48px;
-    text-align: center;
-    background: var(--grey-100);
-  }
-  .statement-pre {
-    font-size: 0.72rem; letter-spacing: 0.28em;
-    text-transform: uppercase; color: var(--grey-400);
-    margin-bottom: 28px;
-  }
-  .statement-text {
-    font-family: var(--serif);
-    font-size: clamp(1.5rem, 3.2vw, 3rem);
-    font-weight: 400; font-style: italic;
-    line-height: 1.35; max-width: 860px;
-    margin: 0 auto 28px;
-    color: var(--black);
-  }
-  .statement-em { color: var(--grey-600); font-style: normal; font-weight: 600; }
-  .statement-line {
-    width: 56px; height: 2px;
-    background: var(--accent); margin: 0 auto;
-  }
+/* Card */
+.pc { background:var(--white); position:relative; overflow:hidden; display:flex; flex-direction:column; }
+.pc-img { position:relative; overflow:hidden; aspect-ratio:3/4; background:var(--g100); cursor:pointer; }
+.pc-img img { width:100%; height:100%; object-fit:cover; transition:transform .8s var(--ease); }
+.pc:hover .pc-img img { transform:scale(1.05); }
+.pc-badge { position:absolute; top:13px; left:13px; font-size:.58rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; background:var(--accent); color:var(--black); padding:3px 8px; }
+.pc-peek { position:absolute; bottom:-44px; left:0; right:0; background:rgba(10,10,10,.9); display:flex; align-items:center; justify-content:center; padding:13px; transition:bottom .3s var(--ease); }
+.pc:hover .pc-peek { bottom:0; }
+.pc-peek-btn { font-size:.62rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--white); background:none; border:none; cursor:pointer; font-family:var(--sans); }
+.pc-info { padding:16px 16px 20px; border-top:1px solid var(--g200); flex:1; display:flex; flex-direction:column; }
+.pc-name { font-family:var(--serif); font-size:.98rem; font-weight:600; line-height:1.2; margin-bottom:3px; }
+.pc-sub { font-size:.68rem; color:var(--g400); letter-spacing:.1em; margin-bottom:11px; }
+.pc-price { font-size:.9rem; font-weight:600; margin-bottom:12px; }
+.sz-row { display:flex; gap:5px; margin-bottom:12px; flex-wrap:wrap; }
+.sz { width:31px; height:31px; border:1px solid var(--g200); background:none; font-size:.62rem; font-weight:500; cursor:pointer; transition:background .18s,border-color .18s; font-family:var(--sans); }
+.sz:hover,.sz.on { background:var(--black); border-color:var(--black); color:var(--white); }
+.wa-btn { display:flex; align-items:center; justify-content:center; gap:7px; width:100%; padding:11px; background:var(--black); border:none; color:var(--white); font-size:.64rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; cursor:pointer; transition:background .22s; font-family:var(--sans); text-decoration:none; }
+.wa-btn:hover { background:#25D366; }
+.wa-ico { width:13px; height:13px; fill:currentColor; flex-shrink:0; }
 
-  /* FEATURED PRODUCTS */
-  .products-section {
-    padding: 100px 0;
-    background: var(--white);
-  }
-  .products-header {
-    display: flex; align-items: flex-end; justify-content: space-between;
-    margin-bottom: 56px;
-  }
-  .products-view-all {
-    font-size: 0.72rem; font-weight: 600;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--grey-600); text-decoration: none;
-    border-bottom: 1px solid var(--grey-200);
-    padding-bottom: 2px;
-    transition: color 0.25s, border-color 0.25s;
-  }
-  .products-view-all:hover { color: var(--black); border-color: var(--black); }
-  .products-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-  }
-  .product-card {
-    background: var(--white);
-    position: relative; overflow: hidden;
-    display: flex; flex-direction: column;
-  }
-  .product-img-wrap {
-    position: relative; overflow: hidden;
-    aspect-ratio: 3/4;
-    background: var(--grey-100);
-    cursor: pointer;
-  }
-  .product-img-wrap img {
-    width: 100%; height: 100%; object-fit: cover;
-    transition: transform 0.8s var(--transition);
-  }
-  .product-card:hover .product-img-wrap img { transform: scale(1.06); }
-  .product-badge {
-    position: absolute; top: 16px; left: 16px;
-    font-size: 0.62rem; font-weight: 600;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    background: var(--accent); color: var(--black);
-    padding: 4px 10px;
-  }
-  .product-quick-action {
-    position: absolute; bottom: -48px; left: 0; right: 0;
-    background: rgba(10,10,10,0.88);
-    display: flex; align-items: center; justify-content: center;
-    padding: 16px;
-    transition: bottom 0.35s var(--transition);
-  }
-  .product-card:hover .product-quick-action { bottom: 0; }
-  .product-quick-btn {
-    font-size: 0.68rem; font-weight: 600;
-    letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--white); background: none; border: none;
-    cursor: pointer;
-  }
-  .product-info {
-    padding: 20px 0;
-    flex: 1; display: flex; flex-direction: column;
-  }
-  .product-name {
-    font-family: var(--serif);
-    font-size: 1.15rem; font-weight: 600;
-    line-height: 1.25; margin-bottom: 4px;
-  }
-  .product-sub {
-    font-size: 0.72rem; color: var(--grey-400);
-    letter-spacing: 0.1em; margin-bottom: 14px;
-  }
-  .product-price {
-    font-size: 0.95rem; font-weight: 600; letter-spacing: 0.04em; margin-bottom: 16px;
-  }
-  .product-sizes {
-    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
-  }
-  .size-btn {
-    width: 38px; height: 38px;
-    border: 1px solid var(--grey-200);
-    background: none; font-size: 0.68rem;
-    font-weight: 500; cursor: pointer;
-    transition: 0.2s; font-family: var(--sans);
-  }
-  .size-btn:hover, .size-btn.active {
-    background: var(--black); border-color: var(--black); color: var(--white);
-  }
-  .wa-btn {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; padding: 14px;
-    background: var(--black); border: none; color: var(--white);
-    font-size: 0.7rem; font-weight: 600;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    cursor: pointer; transition: background 0.25s;
-    font-family: var(--sans);
-    text-decoration: none;
-  }
-  .wa-btn:hover { background: #25D366; }
-  .wa-icon { width: 15px; height: 15px; fill: currentColor; }
+/* CTA */
+.cta-wrap { position:relative; height:68vh; min-height:340px; overflow:hidden; }
+.cta-wrap img { width:100%; height:100%; object-fit:cover; }
+.cta-layer { position:absolute; inset:0; background:rgba(0,0,0,.52); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px; }
+.cta-ey { font-size:.63rem; letter-spacing:.28em; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+.cta-ttl { font-family:var(--serif); font-size:clamp(2rem,6vw,4.4rem); font-weight:600; color:var(--white); line-height:1.06; margin-bottom:28px; }
+.cta-shop { display:inline-block; font-size:.68rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--black); background:var(--white); padding:13px 34px; text-decoration:none; transition:background .22s; }
+.cta-shop:hover { background:var(--accent); }
 
-  /* CTA BANNER */
-  .cta-banner {
-    position: relative; height: 60vh; overflow: hidden;
-  }
-  .cta-banner img { width: 100%; height: 100%; object-fit: cover; }
-  .cta-banner-overlay {
-    position: absolute; inset: 0;
-    background: rgba(0,0,0,0.5);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; text-align: center;
-    padding: 20px;
-  }
-  .cta-title {
-    font-family: var(--serif);
-    font-size: clamp(2.2rem, 6vw, 4.5rem);
-    font-weight: 600; color: var(--white);
-    line-height: 1.06; margin-bottom: 32px;
-  }
+/* ── COLLECTION PAGE ── */
+#collection { display:none; padding-top:64px; }
+#collection.active { display:block; }
+.coll-banner { position:relative; height:50vh; min-height:280px; overflow:hidden; }
+.coll-banner img { width:100%; height:100%; object-fit:cover; }
+.coll-banner-lay { position:absolute; inset:0; background:rgba(0,0,0,.5); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; }
+.coll-ttl { font-family:var(--serif); font-size:clamp(1.9rem,5vw,3.6rem); font-weight:600; color:var(--white); text-align:center; }
+.coll-filters { padding:28px 40px 0; display:flex; align-items:center; gap:8px; flex-wrap:wrap; border-bottom:1px solid var(--g200); }
+.fil-btn { font-size:.64rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--g600); background:none; border:1px solid var(--g200); padding:7px 15px; cursor:pointer; transition:background .18s,color .18s,border-color .18s; font-family:var(--sans); }
+.fil-btn.on,.fil-btn:hover { background:var(--black); color:var(--white); border-color:var(--black); }
+.coll-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; padding:2px 0; }
+.coll-body { padding-bottom:90px; }
 
-  /* COLLECTION PAGE */
-  #collection { display: none; }
-  #collection.active { display: block; }
-  .collection-banner {
-    position: relative; height: 45vh; overflow: hidden; margin-top: 72px;
-  }
-  .collection-banner img { width: 100%; height: 100%; object-fit: cover; }
-  .collection-banner-overlay {
-    position: absolute; inset: 0;
-    background: rgba(0,0,0,0.5);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .collection-filters {
-    padding: 32px 48px;
-    display: flex; align-items: center; gap: 10px;
-    overflow-x: auto; scrollbar-width: none;
-  }
-  .filter-btn {
-    font-size: 0.7rem; font-weight: 500;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--grey-600); background: none; border: 1px solid var(--grey-200);
-    padding: 10px 20px; cursor: pointer; white-space: nowrap;
-    font-family: var(--sans);
-  }
-  .filter-btn.active { background: var(--black); color: var(--white); border-color: var(--black); }
-  .collection-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 30px; padding: 0 48px 100px;
-  }
+/* ── PRODUCT MODAL ── */
+#pp { display:none; position:fixed; inset:0; z-index:2000; overflow-y:auto; background:var(--white); }
+#pp.open { display:block; }
+.pp-close { position:fixed; top:18px; right:18px; z-index:2100; width:42px; height:42px; border-radius:50%; background:var(--white); border:1px solid var(--g200); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; color:var(--g600); box-shadow:0 4px 16px rgba(0,0,0,.1); transition:background .2s,color .2s; }
+.pp-close:hover { background:var(--black); color:var(--white); }
+.pp-layout { display:grid; grid-template-columns:1.1fr .9fr; min-height:100vh; }
+.pp-gallery { position:sticky; top:0; height:100vh; overflow:hidden; background:var(--g100); }
+.pp-gallery img { width:100%; height:100%; object-fit:cover; }
+.pp-detail { padding:76px 56px 76px 48px; display:flex; flex-direction:column; }
+.pp-crumb { font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--g400); margin-bottom:26px; display:flex; gap:6px; align-items:center; }
+.pp-crumb a { color:inherit; text-decoration:none; transition:color .2s; }
+.pp-crumb a:hover { color:var(--black); }
+.pp-name { font-family:var(--serif); font-size:clamp(1.6rem,2.5vw,2.4rem); font-weight:600; line-height:1.12; margin-bottom:4px; }
+.pp-sub { font-size:.75rem; color:var(--g400); letter-spacing:.1em; margin-bottom:22px; }
+.pp-price { font-size:1.3rem; font-weight:600; margin-bottom:26px; }
+.pp-div { height:1px; background:var(--g200); margin-bottom:22px; }
+.pp-label { font-size:.62rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--g600); margin-bottom:9px; }
+.pp-sizes { display:flex; gap:7px; margin-bottom:26px; flex-wrap:wrap; }
+.pp-sz { width:44px; height:44px; border:1px solid var(--g200); background:none; font-size:.7rem; font-weight:500; cursor:pointer; transition:background .18s,border-color .18s; font-family:var(--sans); }
+.pp-sz:hover,.pp-sz.on { background:var(--black); border-color:var(--black); color:var(--white); }
+.pp-wa { display:flex; align-items:center; justify-content:center; gap:9px; padding:16px; background:var(--black); border:none; color:var(--white); font-size:.7rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; cursor:pointer; width:100%; margin-bottom:26px; transition:background .22s; font-family:var(--sans); text-decoration:none; }
+.pp-wa:hover { background:#25D366; }
+.pp-meta-row { display:flex; gap:18px; padding:13px 0; border-bottom:1px solid var(--g200); }
+.pp-meta-label { font-size:.64rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--g600); min-width:82px; padding-top:2px; }
+.pp-meta-val { font-size:.8rem; color:var(--g800); line-height:1.6; }
 
-  /* PRODUCT PAGE */
-  #product-page { display: none; }
-  #product-page.active { display: block; padding-top: 72px; }
-  .product-layout {
-    display: grid; grid-template-columns: 1.1fr 0.9fr;
-    min-height: calc(100vh - 72px);
-  }
-  .product-gallery { background: var(--grey-100); }
-  .product-gallery img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .product-detail { padding: 80px 72px; }
-  .product-detail-name {
-    font-family: var(--serif);
-    font-size: clamp(2rem, 3vw, 3rem);
-    font-weight: 600; margin-bottom: 8px;
-  }
-  .product-detail-price { font-size: 1.5rem; font-weight: 600; margin-bottom: 40px; }
-  .detail-size-btn {
-    width: 50px; height: 50px; border: 1px solid var(--grey-200);
-    background: none; cursor: pointer; font-family: var(--sans); margin-right: 8px;
-  }
-  .detail-size-btn.active { background: var(--black); color: var(--white); border-color: var(--black); }
-  .product-detail-wa {
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    padding: 18px; background: var(--black); color: var(--white);
-    text-decoration: none; font-size: 0.8rem; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.1em;
-    margin: 40px 0; transition: 0.3s;
-  }
-  .product-detail-wa:hover { background: #25D366; }
-  .meta-row { padding: 18px 0; border-bottom: 1px solid var(--grey-200); display: flex; gap: 20px; }
-  .meta-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--grey-600); width: 100px; }
-  .meta-value { font-size: 0.85rem; flex: 1; }
+/* FOOTER */
+footer { background:var(--black); color:var(--g400); padding:68px 0 42px; }
+.foot-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; margin-bottom:52px; }
+.foot-brand { font-family:var(--serif); font-size:1.3rem; font-weight:700; color:var(--white); margin-bottom:11px; }
+.foot-brand .fdot { color:var(--accent); }
+.foot-tag { font-size:.76rem; line-height:1.65; max-width:230px; margin-bottom:20px; }
+.foot-soc { display:flex; gap:10px; }
+.foot-soc a { width:33px; height:33px; border:1px solid rgba(255,255,255,.12); display:flex; align-items:center; justify-content:center; color:var(--g400); text-decoration:none; font-size:.7rem; transition:border-color .22s,color .22s; }
+.foot-soc a:hover { border-color:var(--accent); color:var(--accent); }
+.foot-col-title { font-size:.62rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--white); margin-bottom:16px; }
+.foot-col ul { list-style:none; display:flex; flex-direction:column; gap:9px; }
+.foot-col ul li a { font-size:.78rem; color:var(--g400); text-decoration:none; transition:color .22s; }
+.foot-col ul li a:hover { color:var(--white); }
+.foot-bottom { border-top:1px solid rgba(255,255,255,.07); padding-top:20px; display:flex; align-items:center; justify-content:space-between; }
+.foot-copy { font-size:.68rem; }
+.foot-links { display:flex; gap:20px; }
+.foot-links a { font-size:.68rem; color:var(--g600); text-decoration:none; transition:color .22s; }
+.foot-links a:hover { color:var(--g400); }
 
-  /* FOOTER */
-  footer { background: var(--black); color: var(--grey-400); padding: 80px 0 40px; }
-  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 60px; }
-  .footer-brand-name { font-family: var(--serif); font-size: 1.5rem; color: var(--white); margin-bottom: 15px; }
-  .footer-col-title { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--white); margin-bottom: 20px; }
-  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .footer-col ul li a { color: var(--grey-400); text-decoration: none; font-size: 0.85rem; }
-  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; display: flex; justify-content: space-between; font-size: 0.75rem; }
+/* PAGE SHELLS */
+.page { display:none; }
+.page.active { display:block; }
+#home.active { display:block; }
 
-  /* MOBILE MENU */
-  .mobile-menu {
-    position: fixed; inset: 0; background: var(--white); z-index: 2000;
-    display: none; flex-direction: column; padding: 100px 40px; gap: 30px;
-  }
-  .mobile-menu.open { display: flex; }
-  .mobile-menu a { font-family: var(--serif); font-size: 2.5rem; color: var(--black); text-decoration: none; }
-  .menu-close { position: absolute; top: 25px; right: 25px; font-size: 2rem; border: none; background: none; }
-
-  /* PAGE TRANSITIONS */
-  .page { display: none; }
-  .page.active { display: block; }
-  .fade-in { opacity: 0; transform: translateY(20px); transition: 0.8s var(--transition); }
-  .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-  /* ────────────────────────────────────────────────────────
-     RESPONSIVE BREAKPOINTS (Mobile/Tablet Friendly)
-  ────────────────────────────────────────────────────────── */
-  @media (max-width: 1024px) {
-    .container { padding: 0 30px; }
-    .products-grid, .collection-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .footer-grid { grid-template-columns: 1fr 1fr; }
-    .product-layout { grid-template-columns: 1fr; }
-    .product-detail { padding: 40px 30px; }
-  }
-
-  @media (max-width: 768px) {
-    nav { padding: 0 20px; }
-    .nav-links, .nav-cta { display: none; }
-    .nav-hamburger { display: flex; }
-    .hero-content { left: 20px; bottom: 80px; right: 20px; }
-    .split-section { grid-template-columns: 1fr; height: auto; }
-    .split-item { height: 400px; }
-    .split-overlay { padding: 30px; }
-    .statement { padding: 80px 20px; }
-    .collection-grid { padding: 0 20px 80px; }
-    .collection-filters { padding: 20px; }
-  }
-
-  @media (max-width: 480px) {
-    .products-grid, .collection-grid { grid-template-columns: 1fr; }
-    .hero-title { font-size: 2.8rem; }
-    .footer-grid { grid-template-columns: 1fr; }
-    .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
-  }
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .pgrid { grid-template-columns:repeat(2,1fr); }
+  .coll-grid { grid-template-columns:repeat(2,1fr); }
+  .foot-grid { grid-template-columns:1fr 1fr; gap:28px; }
+  .pp-layout { grid-template-columns:1fr 1fr; }
+}
+@media(max-width:768px){
+  nav { padding:0 16px; height:60px; }
+  .nav-links,.nav-cta { display:none; }
+  .nav-ham { display:flex; }
+  .container { padding:0 16px; }
+  .hero-body { left:16px; bottom:68px; }
+  .hero-title { font-size:clamp(1.65rem,7vw,2.7rem); }
+  .split-section { grid-template-columns:1fr; height:auto; }
+  .split-item { height:64vw; min-height:240px; }
+  .split-grad { padding:20px; }
+  .statement { padding:64px 16px; }
+  .products-section { padding:64px 0; }
+  .pgrid { grid-template-columns:repeat(2,1fr); }
+  .prod-header { padding:0 16px; }
+  .coll-filters { padding:18px 16px 0; }
+  .coll-grid { grid-template-columns:repeat(2,1fr); }
+  .pp-layout { grid-template-columns:1fr; }
+  .pp-gallery { position:relative; height:86vw; }
+  .pp-detail { padding:26px 16px 56px; }
+  .pp-close { top:12px; right:12px; width:38px; height:38px; }
+  .foot-grid { grid-template-columns:1fr; gap:26px; }
+  .foot-bottom { flex-direction:column; gap:12px; text-align:center; }
+  .cta-wrap { height:58vw; min-height:280px; }
+}
+@media(max-width:480px){
+  .pgrid { grid-template-columns:1fr; }
+  .coll-grid { grid-template-columns:1fr; }
+}
 </style>
 </head>
 <body>
 
-<!-- CURSOR -->
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
 <!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobileMenu">
-  <button class="menu-close" id="menuClose">✕</button>
-  <a href="#" onclick="navigate('home'); return false;">Home</a>
-  <a href="#" onclick="navigate('collection'); return false;">Collection</a>
-  <a href="#" onclick="scrollToProducts(); return false;">Shop</a>
-  <a href="https://wa.me/917016248695" target="_blank">Contact</a>
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close-btn" id="mobClose">✕</button>
+  <a href="#" onclick="go('home');closeMob();return false;">Home</a>
+  <a href="#" onclick="go('collection');closeMob();return false;">Collection</a>
+  <a href="#" onclick="toShop();closeMob();return false;">Shop</a>
+  <a href="https://wa.me/917016248695" target="_blank" onclick="closeMob()">WhatsApp</a>
 </div>
 
-<!-- NAVBAR -->
-<nav id="navbar">
-  <a href="#" class="nav-logo" onclick="navigate('home'); return false;">
-    <span>N</span>IVVI.IN
-  </a>
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo" onclick="go('home');return false;">NIVVI<span class="ndot">.</span>IN</a>
   <ul class="nav-links">
-    <li><a href="#" onclick="navigate('home'); return false;">Home</a></li>
-    <li><a href="#" onclick="navigate('collection'); return false;">Collection</a></li>
-    <li><a href="#" onclick="scrollToProducts(); return false;">Shop</a></li>
-    <li><a href="https://wa.me/917016248695" target="_blank">Help</a></li>
+    <li><a href="#" onclick="go('home');return false;">Home</a></li>
+    <li><a href="#" onclick="go('collection');return false;">Collection</a></li>
+    <li><a href="#" onclick="toShop();return false;">Shop</a></li>
+    <li><a href="#" onclick="go('collection');return false;">Lookbook</a></li>
   </ul>
   <div class="nav-right">
     <a href="https://wa.me/917016248695" class="nav-cta" target="_blank">Order via WA</a>
-    <div class="nav-hamburger" id="hamburger">
-      <span></span><span></span><span></span>
-    </div>
+    <button class="nav-ham" id="hamBtn" onclick="toggleMob()"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
-<!-- HOME PAGE -->
+<!-- ═══ HOME ═══ -->
 <div id="home" class="page active">
-  <!-- HERO SLIDER -->
+
   <section class="hero">
-    <div class="hero-slide active" id="slide-0">
+    <div class="hero-slide active" id="sl0">
       <img src="poster 1.jpg" alt="NIVVI">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <div class="hero-eyebrow">New Season — 2025</div>
+      <div class="hero-grad"></div>
+      <div class="hero-body">
+        <div class="hero-ey">New Drop — 2025</div>
         <h1 class="hero-title">Details Over<br>Trends.</h1>
-        <a href="#" class="hero-btn" onclick="navigate('collection'); return false;">Shop Collection</a>
+        <a href="#" class="hero-btn" onclick="go('collection');return false;">Explore Collection</a>
       </div>
     </div>
-    <div class="hero-slide" id="slide-1">
+    <div class="hero-slide" id="sl1">
       <img src="poster 2.jpg" alt="NIVVI">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <div class="hero-eyebrow">Elevated Essentials</div>
-        <h1 class="hero-title">Comfort in<br>Every Fit.</h1>
-        <a href="#" class="hero-btn" onclick="navigate('collection'); return false;">Shop Now</a>
+      <div class="hero-grad"></div>
+      <div class="hero-body">
+        <div class="hero-ey">Streetwear Redefined</div>
+        <h1 class="hero-title">Tees Turned Into<br>Obsession.</h1>
+        <a href="#" class="hero-btn" onclick="go('collection');return false;">Shop Now</a>
+      </div>
+    </div>
+    <div class="hero-slide" id="sl2">
+      <img src="poster 3.jpg" alt="NIVVI">
+      <div class="hero-grad"></div>
+      <div class="hero-body">
+        <div class="hero-ey">Couch Club — Always</div>
+        <h1 class="hero-title">Comfort in<br>Every Shirt.</h1>
+        <a href="#" class="hero-btn" onclick="go('collection');return false;">Find Your Fit</a>
       </div>
     </div>
     <div class="hero-dots" id="heroDots">
-      <div class="hero-dot active" onclick="goToSlide(0)"></div>
-      <div class="hero-dot" onclick="goToSlide(1)"></div>
+      <div class="hero-dot active" onclick="slide(0)"></div>
+      <div class="hero-dot" onclick="slide(1)"></div>
+      <div class="hero-dot" onclick="slide(2)"></div>
     </div>
   </section>
 
-  <!-- MARQUEE -->
   <div class="marquee-bar">
     <div class="marquee-track">
-      <span class="marquee-item">Premium Oversized Tees <span class="dot">✦</span></span>
-      <span class="marquee-item">NIVVI.IN <span class="dot">✦</span></span>
-      <span class="marquee-item">Designed in India <span class="dot">✦</span></span>
-      <span class="marquee-item">Streetwear Elevated <span class="dot">✦</span></span>
-      <span class="marquee-item">Premium Oversized Tees <span class="dot">✦</span></span>
-      <span class="marquee-item">NIVVI.IN <span class="dot">✦</span></span>
+      <span class="m-item">Premium Oversized Tees <span class="m-dot">✦</span></span>
+      <span class="m-item">NIVVI.IN <span class="m-dot">✦</span></span>
+      <span class="m-item">Subtle Embroidery <span class="m-dot">✦</span></span>
+      <span class="m-item">Designed in India <span class="m-dot">✦</span></span>
+      <span class="m-item">Details Over Trends <span class="m-dot">✦</span></span>
+      <span class="m-item">Streetwear Elevated <span class="m-dot">✦</span></span>
+      <span class="m-item">Premium Oversized Tees <span class="m-dot">✦</span></span>
+      <span class="m-item">NIVVI.IN <span class="m-dot">✦</span></span>
+      <span class="m-item">Subtle Embroidery <span class="m-dot">✦</span></span>
+      <span class="m-item">Designed in India <span class="m-dot">✦</span></span>
+      <span class="m-item">Details Over Trends <span class="m-dot">✦</span></span>
+      <span class="m-item">Streetwear Elevated <span class="m-dot">✦</span></span>
     </div>
   </div>
 
-  <!-- SPLIT SECTION -->
+  <!-- SPLIT — poster_4 = Motorsport, poster_5 = Anime -->
   <div class="split-section">
-    <div class="split-item" onclick="navigate('collection')">
-      <img src="poster 1.jpg" alt="Essentials">
-      <div class="split-overlay">
-        <div class="split-tag">Capsule 01</div>
-        <h2 class="split-title">Premium Essentials</h2>
+    <div class="split-item" onclick="goCategory('motorsport')">
+      <img src="poster 4.jpg" alt="Motorsport">
+      <div class="split-grad">
+        <div class="split-tag">Capsule No. 01</div>
+        <h2 class="split-title">Motorsport</h2>
+        <a href="#" class="split-cta" onclick="goCategory('motorsport');return false;">Explore <span class="split-arr">→</span></a>
       </div>
     </div>
-    <div class="split-item" onclick="navigate('collection')">
-      <img src="poster 3.jpg" alt="Limited">
-      <div class="split-overlay">
-        <div class="split-tag">Limited Edition</div>
-        <h2 class="split-title">Vibes Only</h2>
+    <div class="split-item" onclick="goCategory('anime')">
+      <img src="poster 5.jpg" alt="Anime">
+      <div class="split-grad">
+        <div class="split-tag">Capsule No. 02</div>
+        <h2 class="split-title">Anime</h2>
+        <a href="#" class="split-cta" onclick="goCategory('anime');return false;">Explore <span class="split-arr">→</span></a>
       </div>
     </div>
   </div>
 
-  <!-- BRAND STATEMENT -->
-  <div class="statement fade-in">
-    <div class="statement-pre">The NIVVI Philosophy</div>
-    <p class="statement-text">"Designed for those who <span class="statement-em">don't follow trends</span>. They define them."</p>
-    <div class="statement-line"></div>
+  <div class="statement fade-up">
+    <div class="stmt-pre">The NIVVI Philosophy</div>
+    <p class="stmt-text">"Designed for those who <span class="stmt-em">don't follow trends</span>. They define them."</p>
+    <div class="stmt-line"></div>
   </div>
 
-  <!-- FEATURED PRODUCTS -->
-  <section class="products-section" id="featured-products">
+  <section class="products-section" id="featured">
     <div class="container">
-      <div class="products-header fade-in">
-        <div>
-          <div class="section-eyebrow">Featured Drops</div>
-          <h2 class="section-title">The Collection</h2>
-        </div>
-        <a href="#" class="products-view-all" onclick="navigate('collection'); return false;">View All →</a>
+      <div class="prod-header fade-up">
+        <div><div class="eyebrow">Featured Drops</div><h2 class="sec-title">The Collection</h2></div>
+        <a href="#" class="view-all" onclick="go('collection');return false;">View All →</a>
       </div>
-      <div class="products-grid" id="homeProductGrid"></div>
+      <div class="pgrid" id="homePG"></div>
     </div>
   </section>
 
-  <!-- CTA BANNER -->
-  <section class="cta-banner fade-in">
-    <img src="poster 2.jpg" alt="Shop">
-    <div class="cta-banner-overlay">
-      <h2 class="cta-title">Find Your Perfect Fit.</h2>
-      <a href="#" class="cta-btn hero-btn" onclick="navigate('collection'); return false;">Shop Now</a>
+  <div class="cta-wrap fade-up">
+    <img src="poster 3.jpg" alt="Find Your Fit">
+    <div class="cta-layer">
+      <div class="cta-ey">New Season. Same Obsession.</div>
+      <h2 class="cta-ttl">Find Your Fit.</h2>
+      <a href="#" class="cta-shop" onclick="go('collection');return false;">Shop Now</a>
     </div>
-  </section>
-</div>
+  </div>
 
-<!-- COLLECTION PAGE -->
+</div><!-- /home -->
+
+<!-- ═══ COLLECTION ═══ -->
 <div id="collection" class="page">
-  <div class="collection-banner">
-    <img src="poster 2.jpg" alt="Banner">
-    <div class="collection-banner-overlay">
-      <h1 class="collection-title section-title" style="color:white">The Full Collection</h1>
+  <div class="coll-banner">
+    <img src="poster 2.jpg" alt="Collection">
+    <div class="coll-banner-lay">
+      <div class="eyebrow" style="color:var(--accent)">NIVVI.IN</div>
+      <h1 class="coll-ttl">The Full Collection</h1>
     </div>
   </div>
-  <div class="collection-filters">
-    <button class="filter-btn active" onclick="filterProducts('All', this)">All</button>
-    <button class="filter-btn" onclick="filterProducts('Casual', this)">Casual</button>
-    <button class="filter-btn" onclick="filterProducts('Limited', this)">Limited</button>
-    <button class="filter-btn" onclick="filterProducts('Vibes', this)">Vibes</button>
+  <div class="coll-body">
+    <div class="coll-filters" id="collFilters">
+      <button class="fil-btn on" onclick="filterColl('all',this)">All</button>
+      <button class="fil-btn" onclick="filterColl('motorsport',this)">Motorsport</button>
+      <button class="fil-btn" onclick="filterColl('anime',this)">Anime</button>
+      <button class="fil-btn" onclick="filterColl('casual',this)">Casual</button>
+      <button class="fil-btn" onclick="filterColl('vibes',this)">Vibes</button>
+    </div>
+    <div class="coll-grid" id="collPG"></div>
   </div>
-  <div class="collection-grid" id="collectionGrid"></div>
 </div>
 
-<!-- PRODUCT PAGE -->
-<div id="product-page" class="page">
-  <div class="product-layout">
-    <div class="product-gallery">
-      <img src="" alt="" id="productImg">
-    </div>
-    <div class="product-detail">
-      <h1 class="product-detail-name" id="productName">—</h1>
-      <div class="product-detail-price" id="productPrice">—</div>
-      <div class="meta-label" style="margin-bottom: 12px;">Select Size</div>
-      <div id="productSizes" style="margin-bottom: 20px;"></div>
-      <a href="#" class="product-detail-wa" id="productWaBtn" target="_blank">Order via WhatsApp</a>
-      <div class="product-meta">
-        <div class="meta-row"><div class="meta-label">Fabric</div><div class="meta-value">100% Combed Cotton — 240 GSM</div></div>
-        <div class="meta-row"><div class="meta-label">Fit</div><div class="meta-value">Oversized Fit</div></div>
-        <div class="meta-row"><div class="meta-label">Delivery</div><div class="meta-value">3–6 business days across India.</div></div>
+<!-- ═══ PRODUCT MODAL ═══ -->
+<div id="pp">
+  <button class="pp-close" onclick="closePP()" title="Close">✕</button>
+  <div class="pp-layout">
+    <div class="pp-gallery"><img src="" alt="" id="ppImg"></div>
+    <div class="pp-detail">
+      <div class="pp-crumb">
+        <a href="#" onclick="closePP();return false;">Home</a><span>›</span>
+        <a href="#" onclick="closePP();return false;">Collection</a><span>›</span>
+        <span id="ppCrumb">—</span>
+      </div>
+      <h1 class="pp-name" id="ppName">—</h1>
+      <div class="pp-sub" id="ppSub">NIVVI.IN — Premium Oversized Tee</div>
+      <div class="pp-price" id="ppPrice">—</div>
+      <div class="pp-div"></div>
+      <div class="pp-label">Select Size</div>
+      <div class="pp-sizes" id="ppSizes"></div>
+      <a href="#" class="pp-wa" id="ppWa" target="_blank">
+        <svg class="wa-ico" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Order via WhatsApp
+      </a>
+      <div class="pp-meta">
+        <div class="pp-meta-row"><div class="pp-meta-label">Fabric</div><div class="pp-meta-val">100% Combed Cotton · 240 GSM, pre-shrunk, ultra-soft</div></div>
+        <div class="pp-meta-row"><div class="pp-meta-label">Fit</div><div class="pp-meta-val">Oversized — size down for relaxed everyday feel</div></div>
+        <div class="pp-meta-row"><div class="pp-meta-label">Print</div><div class="pp-meta-val">Premium screen print / embroidery — built to last</div></div>
+        <div class="pp-meta-row"><div class="pp-meta-label">Delivery</div><div class="pp-meta-val">3–6 business days across India · Free shipping above ₹999</div></div>
+        <div class="pp-meta-row"><div class="pp-meta-label">Returns</div><div class="pp-meta-val">7-day exchange for size issues via WhatsApp</div></div>
       </div>
     </div>
   </div>
@@ -702,199 +426,225 @@
 <!-- FOOTER -->
 <footer>
   <div class="container">
-    <div class="footer-grid">
+    <div class="foot-grid">
       <div>
-        <div class="footer-brand-name"><span>N</span>IVVI.IN</div>
-        <p style="line-height:1.6">Premium oversized streetwear, designed for those who set the standard. Built in India.</p>
+        <div class="foot-brand">NIVVI<span class="fdot">.</span>IN</div>
+        <p class="foot-tag">Premium oversized streetwear, designed for those who set the standard. Built in India, worn everywhere.</p>
+        <div class="foot-soc">
+          <a href="https://wa.me/917016248695" target="_blank">WA</a>
+          <a href="#">IG</a>
+          <a href="#">X</a>
+        </div>
       </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Shop</div>
+      <div class="foot-col">
+        <div class="foot-col-title">Shop</div>
         <ul>
-          <li><a href="#" onclick="navigate('collection'); return false;">All Products</a></li>
-          <li><a href="#" onclick="navigate('collection'); return false;">Essentials</a></li>
+          <li><a href="#" onclick="go('collection');return false;">All Products</a></li>
+          <li><a href="#" onclick="goCategory('motorsport');return false;">Motorsport</a></li>
+          <li><a href="#" onclick="goCategory('anime');return false;">Anime</a></li>
+          <li><a href="#" onclick="goCategory('casual');return false;">Casual</a></li>
         </ul>
       </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Support</div>
+      <div class="foot-col">
+        <div class="foot-col-title">Info</div>
         <ul>
+          <li><a href="#">About NIVVI</a></li>
           <li><a href="#">Size Guide</a></li>
-          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Shipping & Returns</a></li>
+          <li><a href="#">Care Instructions</a></li>
         </ul>
       </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Social</div>
+      <div class="foot-col">
+        <div class="foot-col-title">Contact</div>
         <ul>
-          <li><a href="#">Instagram</a></li>
-          <li><a href="https://wa.me/917016248695" target="_blank">WhatsApp</a></li>
+          <li><a href="https://wa.me/917016248695" target="_blank">WhatsApp Orders</a></li>
+          <li><a href="#">Instagram DM</a></li>
+          <li><a href="#">FAQ</a></li>
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">
-      <div>© 2025 NIVVI.IN</div>
-      <div style="display:flex; gap:20px"><a href="#" style="color:inherit;text-decoration:none">Privacy</a><a href="#" style="color:inherit;text-decoration:none">Terms</a></div>
+    <div class="foot-bottom">
+      <div class="foot-copy">© 2025 NIVVI.IN — All rights reserved.</div>
+      <div class="foot-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
     </div>
   </div>
 </footer>
 
 <script>
-// ─── DATA (Removed Motorsport & Anime) ──────────────────
-const products = [
-  {
-    id: 'couch_club',
-    name: 'Couch Club',
-    subtitle: 'Casual Collection',
-    price: '₹999',
-    img: 'couch club.jpg',
-    category: 'Casual',
-    badge: 'Bestseller'
-  },
-  {
-    id: '90s_mood',
-    name: "90's Mood",
-    subtitle: 'Vibes Collection',
-    price: '₹1,099',
-    img: '90s mood.jpg',
-    category: 'Vibes',
-    badge: 'Limited'
-  },
-  {
-    id: 'essential_black',
-    name: "Pure Black",
-    subtitle: 'Casual Collection',
-    price: '₹899',
-    img: 'poster 1.jpg',
-    category: 'Casual',
-    badge: ''
-  },
-  {
-    id: 'midnight_vibes',
-    name: "Midnight Calm",
-    subtitle: 'Limited Collection',
-    price: '₹1,199',
-    img: 'poster 2.jpg',
-    category: 'Limited',
-    badge: 'New'
-  }
+/* ─── DATA ─── */
+const PX = [
+  { id:'midnight_racer', name:'Midnight Racer',  sub:'Motorsport Collection', price:'₹1,199', img:'midnight racer.jpg', badge:'Bestseller', cat:'motorsport' },
+  { id:'akira_thread',   name:'Akira Thread',    sub:'Anime Collection',      price:'₹1,199', img:'akira thread.jpg',   badge:'New',        cat:'anime'      },
+  { id:'apex_line',      name:'Apex Line',       sub:'Motorsport Collection', price:'₹999',   img:'apex line.jpg',       badge:'',           cat:'motorsport' },
+  { id:'couch_club',     name:'Couch Club',      sub:'Casual Collection',     price:'₹999',   img:'couch club.jpg',      badge:'',           cat:'casual'     },
+  { id:'90s_mood',       name:"90's Mood",       sub:'Vibes Collection',      price:'₹1,099', img:'90s mood.jpg',        badge:'Limited',    cat:'vibes'      },
+  { id:'shinobi_mark',   name:'Shinobi Mark',    sub:'Anime Collection',      price:'₹1,199', img:'shinobi mark.jpg',    badge:'New',        cat:'anime'      },
 ];
+const SIZES = ['XS','S','M','L','XL','XXL'];
+const SEL = {};
 
-const sizes = ['S','M','L','XL'];
-let selectedSizes = {};
+const WA_ICON = `<svg class="wa-ico" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>`;
 
-// ─── CORE FUNCTIONS ──────────────────────────────────────
-function buildProductCard(p, gridId) {
-  const key = gridId + '_' + p.id;
-  if (!selectedSizes[key]) selectedSizes[key] = 'M';
+function waUrl(name, sz) {
+  return `https://wa.me/917016248695?text=${encodeURIComponent(`Hi, I want to order the ${name} in size ${sz}. Please share details.`)}`;
+}
 
-  const wa = `https://wa.me/917016248695?text=${encodeURIComponent(
-    `Hi, I want to order ${p.name} in size ${selectedSizes[key]}.`
-  )}`;
-
+function mkCard(p, ns) {
+  const k = ns + '_' + p.id;
+  if (!SEL[k]) SEL[k] = 'M';
+  const szH = SIZES.map(s => `<button class="sz${SEL[k]===s?' on':''}" onclick="pickSz('${k}','${s}',event)">${s}</button>`).join('');
   return `
-  <div class="product-card">
-    <div class="product-img-wrap" onclick="openProduct('${p.id}')">
+  <div class="pc" id="pc-${k}">
+    <div class="pc-img" onclick="openPP('${p.id}')">
       <img src="${p.img}" alt="${p.name}" loading="lazy">
-      ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
-      <div class="product-quick-action">
-        <span class="product-quick-btn">View Details</span>
-      </div>
+      ${p.badge?`<div class="pc-badge">${p.badge}</div>`:''}
+      <div class="pc-peek"><button class="pc-peek-btn" onclick="event.stopPropagation();openPP('${p.id}')">View Details →</button></div>
     </div>
-    <div class="product-info">
-      <div class="product-name">${p.name}</div>
-      <div class="product-sub">${p.subtitle}</div>
-      <div class="product-price">${p.price}</div>
-      <div class="product-sizes" id="sizes-${key}">
-        ${sizes.map(s => `<button class="size-btn ${selectedSizes[key]===s?'active':''}" onclick="selectSize('${key}', '${s}', '${p.name}', event)">${s}</button>`).join('')}
-      </div>
-      <a class="wa-btn" id="wa-${key}" href="${wa}" target="_blank">
-        <svg class="wa-icon" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-        Order via WA
-      </a>
+    <div class="pc-info">
+      <div class="pc-name">${p.name}</div>
+      <div class="pc-sub">${p.sub}</div>
+      <div class="pc-price">${p.price}</div>
+      <div class="sz-row" id="sr-${k}">${szH}</div>
+      <a class="wa-btn" id="wa-${k}" href="${waUrl(p.name,SEL[k])}" target="_blank">${WA_ICON} Order via WhatsApp</a>
     </div>
   </div>`;
 }
 
-function selectSize(key, size, name, e) {
+function pickSz(k, sz, e) {
   e.stopPropagation();
-  selectedSizes[key] = size;
-  const container = document.getElementById('sizes-' + key);
-  container.querySelectorAll('.size-btn').forEach(btn => btn.classList.toggle('active', btn.textContent === size));
-  document.getElementById('wa-' + key).href = `https://wa.me/917016248695?text=${encodeURIComponent(`Hi, I want to order ${name} in size ${size}.`)}`;
+  SEL[k] = sz;
+  const row = document.getElementById('sr-'+k);
+  if (row) row.querySelectorAll('.sz').forEach(b => b.classList.toggle('on', b.textContent===sz));
+  const pid = k.split('_').slice(1).join('_');
+  const p = PX.find(x => x.id===pid);
+  const el = document.getElementById('wa-'+k);
+  if (el && p) el.href = waUrl(p.name, sz);
 }
 
-function filterProducts(cat, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const filtered = cat === 'All' ? products : products.filter(p => p.category === cat);
-  document.getElementById('collectionGrid').innerHTML = filtered.map(p => buildProductCard(p, 'coll')).join('');
+/* ─── RENDER ─── */
+function renderHome() {
+  const g = document.getElementById('homePG');
+  if (g) g.innerHTML = PX.map(p => mkCard(p,'h')).join('');
+}
+function renderColl(filter) {
+  const g = document.getElementById('collPG');
+  if (!g) return;
+  const list = filter==='all' ? PX : PX.filter(p => p.cat===filter);
+  g.innerHTML = list.map(p => mkCard(p,'c')).join('');
 }
 
-function navigate(page) {
+/* ─── NAVIGATION ─── */
+function go(page) {
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-  const target = document.getElementById(page === 'product' ? 'product-page' : page);
-  target.classList.add('active');
-  window.scrollTo(0, 0);
-  document.getElementById('mobileMenu').classList.remove('open');
+  const el = document.getElementById(page);
+  if (el) { el.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+  if (page==='collection') { setTimeout(()=>renderColl('all'),60); }
 }
 
-function openProduct(id) {
-  const p = products.find(x => x.id === id);
-  document.getElementById('productImg').src = p.img;
-  document.getElementById('productName').textContent = p.name;
-  document.getElementById('productPrice').textContent = p.price;
-  document.getElementById('productSizes').innerHTML = sizes.map(s => `<button class="detail-size-btn ${s==='M'?'active':''}" onclick="selectDetailSize('${p.name}', '${s}', this)">${s}</button>`).join('');
-  selectDetailSize(p.name, 'M');
-  navigate('product');
+function goCategory(cat) {
+  go('collection');
+  setTimeout(() => {
+    renderColl(cat);
+    document.querySelectorAll('.fil-btn').forEach(b => {
+      b.classList.toggle('on', b.textContent.toLowerCase()===cat);
+    });
+  }, 90);
 }
 
-function selectDetailSize(name, size, btn) {
-  if(btn) {
-    document.querySelectorAll('.detail-size-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  }
-  document.getElementById('productWaBtn').href = `https://wa.me/917016248695?text=${encodeURIComponent(`Hi, I want to order ${name} in size ${size}.`)}`;
+function filterColl(cat, btn) {
+  document.querySelectorAll('.fil-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderColl(cat);
 }
 
-function scrollToProducts() {
-  navigate('home');
-  setTimeout(() => document.getElementById('featured-products').scrollIntoView({ behavior: 'smooth' }), 100);
+function toShop() {
+  go('home');
+  setTimeout(() => { const el=document.getElementById('featured'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 120);
 }
 
-// ─── UTILS ───────────────────────────────────────────────
-let currentSlide = 0;
-function goToSlide(n) {
-  document.getElementById('slide-' + currentSlide).classList.remove('active');
-  document.querySelectorAll('.hero-dot')[currentSlide].classList.remove('active');
-  currentSlide = n;
-  document.getElementById('slide-' + currentSlide).classList.add('active');
-  document.querySelectorAll('.hero-dot')[currentSlide].classList.add('active');
+/* ─── PRODUCT MODAL ─── */
+function openPP(id) {
+  const p = PX.find(x => x.id===id);
+  if (!p) return;
+  document.getElementById('ppImg').src = p.img;
+  document.getElementById('ppImg').alt = p.name;
+  document.getElementById('ppName').textContent = p.name;
+  document.getElementById('ppCrumb').textContent = p.name;
+  document.getElementById('ppSub').textContent = p.sub + ' — NIVVI.IN';
+  document.getElementById('ppPrice').textContent = p.price;
+  document.getElementById('ppSizes').innerHTML = SIZES.map(s =>
+    `<button class="pp-sz${s==='M'?' on':''}" onclick="pickPPSz('${id}','${s}',this)">${s}</button>`
+  ).join('');
+  document.getElementById('ppWa').href = waUrl(p.name, 'M');
+  const pp = document.getElementById('pp');
+  pp.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  pp.scrollTop = 0;
 }
-setInterval(() => goToSlide((currentSlide + 1) % 2), 5000);
 
-window.addEventListener('scroll', () => document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40));
-document.getElementById('hamburger').onclick = () => document.getElementById('mobileMenu').classList.add('open');
-document.getElementById('menuClose').onclick = () => document.getElementById('mobileMenu').classList.remove('open');
-
-// ─── CURSOR ANIMATION ────────────────────────────────────
-const cursor = document.getElementById('cursor');
-const cursorRing = document.getElementById('cursorRing');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-function animateCursor() {
-  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-  rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15;
-  cursorRing.style.left = rx + 'px'; cursorRing.style.top = ry + 'px';
-  requestAnimationFrame(animateCursor);
+function closePP() {
+  document.getElementById('pp').classList.remove('open');
+  document.body.style.overflow = '';
 }
-if(window.matchMedia("(hover: hover)").matches) animateCursor();
 
-// ─── INIT ────────────────────────────────────────────────
-document.getElementById('homeProductGrid').innerHTML = products.map(p => buildProductCard(p, 'home')).join('');
-document.getElementById('collectionGrid').innerHTML = products.map(p => buildProductCard(p, 'coll')).join('');
+function pickPPSz(id, sz, btn) {
+  document.querySelectorAll('.pp-sz').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const p = PX.find(x => x.id===id);
+  if (p) document.getElementById('ppWa').href = waUrl(p.name, sz);
+}
 
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.1 });
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+// Close modal on Escape
+document.addEventListener('keydown', e => { if (e.key==='Escape') closePP(); });
+
+/* ─── HERO SLIDER ─── */
+let cur = 0;
+function slide(n) {
+  document.getElementById('sl'+cur).classList.remove('active');
+  document.querySelectorAll('.hero-dot')[cur].classList.remove('active');
+  cur = n;
+  document.getElementById('sl'+cur).classList.add('active');
+  document.querySelectorAll('.hero-dot')[cur].classList.add('active');
+}
+setInterval(()=>slide((cur+1)%3), 4500);
+
+/* ─── NAVBAR SCROLL ─── */
+window.addEventListener('scroll', ()=>{
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY>28);
+}, {passive:true});
+
+/* ─── MOBILE MENU ─── */
+function toggleMob() {
+  const m=document.getElementById('mobMenu'), b=document.getElementById('hamBtn');
+  const open=m.classList.toggle('open');
+  b.classList.toggle('open', open);
+  document.body.style.overflow=open?'hidden':'';
+}
+function closeMob() {
+  document.getElementById('mobMenu').classList.remove('open');
+  document.getElementById('hamBtn').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('mobClose').addEventListener('click', closeMob);
+
+/* ─── CURSOR ─── */
+const $c=document.getElementById('cursor'), $cr=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function loop(){ if($c&&$cr){ $c.style.left=mx+'px';$c.style.top=my+'px'; rx+=(mx-rx)*.12;ry+=(my-ry)*.12; $cr.style.left=rx+'px';$cr.style.top=ry+'px'; } requestAnimationFrame(loop); })();
+document.addEventListener('mouseover',e=>{
+  const hov=!!e.target.closest('a,button,.pc,.split-item,.sz,.pp-sz,.fil-btn');
+  $c&&$c.classList.toggle('hov',hov); $cr&&$cr.classList.toggle('hov',hov);
+});
+
+/* ─── FADE UP ─── */
+new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.1})
+  .observe && document.querySelectorAll('.fade-up').forEach(el=>
+    new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.1}).observe(el)
+  );
+
+/* ─── INIT ─── */
+renderHome();
 </script>
 </body>
 </html>
